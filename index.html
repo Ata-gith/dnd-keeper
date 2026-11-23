@@ -3361,7 +3361,7 @@ DND.addClass({
     { name: 'Knacks Known', values: [0, 2, 2, 2, 2, 4, 4, 4, 4, 6, 6, 6, 6, 8, 8, 8, 10, 10, 10, 10] },
   ],
   features: [
-    { level: 1, name: 'Sneak Attack', text: "Once per turn, deal extra damage to a creature you hit with a finesse or ranged weapon attack if you have advantage on the roll, or if another enemy of the target is within 5 ft of it (not incapacitated) and you don't have disadvantage.\nHouse rule: the damage gains 1d6 every 3 levels (2d6 at 4th ... 7d6 at 19th) instead of every 4.", scale: { 1: '1d6', 4: '2d6', 7: '3d6', 10: '4d6', 13: '5d6', 16: '6d6', 19: '7d6' } },
+    { level: 1, name: 'Sneak Attack', text: "Once per turn, deal extra damage to a creature you hit with a finesse or ranged weapon attack if you have advantage on the roll, or if another enemy of the target is within 5 ft of it (not incapacitated) and you don't have disadvantage.\nThe extra damage is 1d6 at 1st level and increases by 1d6 every three rogue levels: 2d6 at 4th, 3d6 at 7th, 4d6 at 10th, 5d6 at 13th, 6d6 at 16th, and 7d6 at 19th.", scale: { 1: '1d6', 4: '2d6', 7: '3d6', 10: '4d6', 13: '5d6', 16: '6d6', 19: '7d6' } },
     { level: 1, name: "Thieves' Cant", text: 'You know thieves\' cant, a secret mix of dialect, jargon, and code, plus secret signs and symbols. Conveying a message takes four times longer than speaking it plainly.', effects: { languages: ["Thieves' Cant"] } },
     { level: 2, name: 'Expertise', text: "Choose two of your skill proficiencies, or one skill and thieves' tools: your proficiency bonus is doubled for them. At 6th level, choose two more.", choice: { id: 'exp', label: 'Expertise', type: 'expertise', count: { 2: 2, 6: 4 }, allowThievesTools: true } },
     { level: 2, name: 'Tricks of the Trade', text: 'You know Knacks of your choice (2 at 2nd, 4 at 6th, 6 at 10th, 8 at 14th, 10 at 17th). When you gain a rogue level, you can replace a knack with another you could learn. Knack DC = 8 + proficiency bonus + Dexterity modifier. Level prerequisites refer to rogue level.', choice: { id: 'knacks', label: 'Knacks', type: 'option', count: { 2: 2, 6: 4, 10: 6, 14: 8, 17: 10 }, list: 'knacks' } },
@@ -4386,66 +4386,70 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Fighter — Champion: earlier and broader passives (2024 direction: Remarkable Athlete at 3, Heroic Warrior). */
   s = sub('fighter', 'champion'); mark(s);
-  f = feat(s, 'Remarkable Athlete'); if (f) { f.level = 3; f.text += '\nGained at 3rd level instead of 7th. You also have advantage on initiative rolls and Strength (Athletics) checks.'; f.effects = Object.assign({}, f.effects, { initAdv: true }); }
+  f = feat(s, 'Remarkable Athlete'); if (f) { f.level = 3; f.text = "Starting at 3rd level, you can add half your proficiency bonus (rounded up) to any Strength, Dexterity, or Constitution check you make that doesn't already use your proficiency bonus, and you have advantage on initiative rolls and Strength (Athletics) checks. In addition, when you make a running long jump, the distance you can cover increases by a number of feet equal to your Strength modifier."; f.effects = Object.assign({}, f.effects, { initAdv: true }); }
   add(s, { level: 7, name: 'Battle Hardened', text: 'You gain proficiency in one saving throw of your choice from STR, DEX, or CON that you lack (or WIS if you have all three).', choice: { id: 'save', label: 'Battle Hardened save', type: 'option', count: 1, options: ['str', 'dex', 'con', 'wis'].map(a => ({ name: a.toUpperCase(), effects: { saves: [a] } })) } });
   add(s, { level: 10, name: 'Heroic Warrior', text: 'During combat, if you have no Heroic Inspiration at the start of your turn, you gain it.' });
 
   /* Monk — Four Elements: cheaper disciplines, free elemental strikes (most common fixes on forums). */
   s = sub('monk', 'four-elements'); mark(s);
-  f = feat(s, 'Disciple of the Elements'); if (f) f.text += '\nDisciplines that cast a spell cost 1 fewer ki point (minimum 1). You learn one extra discipline at 3rd level.';
+  f = feat(s, 'Disciple of the Elements'); if (f) f.text = "You learn magical disciplines that harness the power of the four elements. You know the Elemental Attunement discipline and two other elemental disciplines of your choice, and you learn one more at 6th, 11th, and 17th level. Whenever you learn a new discipline, you can also replace one you know with another. Disciplines that let you cast a spell cost 1 fewer ki point (minimum of 1). The maximum number of ki points you can spend on a single spell (including its base cost and any increase in its level) is 2 at 3rd level, 3 at 5th, 4 at 9th, 5 at 13th, and 6 at 17th. Save DC = your ki save DC.";
   if (f && f.choice) f.choice.count = { 3: 3, 6: 4, 11: 5, 17: 6 };
   add(s, { level: 3, name: 'Elemental Strikes', text: 'When you hit with an unarmed strike, its damage can be acid, cold, fire, lightning, or thunder, and its reach increases by 10 ft for that attack. Once per turn, when you hit with Flurry of Blows, you can push the target 10 ft or pull it 10 ft toward you.' });
 
   /* Monk — Sun Soul: cheaper bonus bolts. */
   s = sub('monk', 'sun-soul'); mark(s);
-  f = feat(s, 'Radiant Sun Bolt'); if (f) f.text += '\nThe bolt range is 60 ft instead of 30 ft, and you can make one extra bolt as a bonus action after the Attack action without spending ki (spending 1 ki still gives two).';
-  f = feat(s, 'Searing Arc Strike'); if (f) f.text += '\nThe 1st-level version costs 1 ki instead of 2.';
+  f = feat(s, 'Radiant Sun Bolt'); if (f) f.text = "You can hurl searing bolts of magical radiance. You gain a ranged spell attack with a range of 60 feet, and you are proficient with it. Its attack and damage rolls use your Dexterity modifier, its damage is radiant, and its damage die is your Martial Arts die. When you take the Attack action on your turn and use this attack as part of it, you can make one more bolt as a bonus action, or spend 1 ki point to make two bolts as that bonus action instead.";
+  f = feat(s, 'Searing Arc Strike'); if (f) f.text = "Immediately after you take the Attack action on your turn, you can spend ki points to cast burning hands as a bonus action. Casting it at 1st level costs 1 ki point, and you can spend 1 additional ki point for each level above 1st to increase the spell's level. The maximum number of ki points you can spend on the spell equals half your monk level.";
 
   /* Warlock — The Undying: weakest patron in common rankings; buffs keep the "won't die" theme. */
   s = sub('warlock', 'undying'); mark(s);
   f = feat(s, 'Among the Dead'); if (f) { f.text += '\nYou can cast Spare the Dying as a bonus action with a range of 30 ft. You also gain resistance to necrotic damage.'; f.effects = Object.assign({}, f.effects, { resist: ['necrotic'] }); }
-  f = feat(s, 'Defy Death'); if (f) { f.text += '\nUsable a number of times equal to your proficiency bonus per long rest instead of once, and you regain 1d8 + CON modifier HP instead of CON modifier. Also triggers when you stabilize a creature with Spare the Dying.'; f.uses = { max: 'pb', reset: 'long' }; }
+  f = feat(s, 'Defy Death'); if (f) { f.text = "When you succeed on a death saving throw or stabilize a creature with spare the dying, you can regain hit points equal to 1d8 + your Constitution modifier (minimum of 1). You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."; f.uses = { max: 'pb', reset: 'long' }; }
   f = feat(s, 'Undying Nature'); if (f) f.text += '\nWhen you drop to 0 HP but are not killed outright, you can drop to 1 HP instead (once per long rest).';
   if (f) f.uses = { max: 1, reset: 'long' };
-  f = feat(s, 'Indestructible Life'); if (f) f.text += '\nUsable twice per short or long rest instead of once.';
+  f = feat(s, 'Indestructible Life'); if (f) f.text = "When you are on your turn, you can use a bonus action to regain hit points equal to 1d8 + your warlock level. Additionally, if you put a severed body part of yours back in place when you use this feature, the part reattaches. You can use this feature twice, and you regain all expended uses when you finish a short or long rest.";
   if (f) f.uses = { max: 2, reset: 'short' };
 
   /* Sorcerer — Wild Magic: player-controlled surges, cheaper Bend Luck (2024 direction). */
   s = sub('sorcerer', 'wild-magic'); mark(s);
-  f = feat(s, 'Wild Magic Surge'); if (f) f.text += '\nOnce per turn you can choose to roll on the Wild Magic Surge table when you cast a sorcerer spell of 1st level or higher (once per long rest without DM prompt); this restores Tides of Chaos.';
-  f = feat(s, 'Bend Luck'); if (f) f.text += '\nCosts 1 sorcery point instead of 2.';
-  f = feat(s, 'Controlled Chaos'); if (f) f.text += '\nGained at 10th level instead of 14th.';
+  f = feat(s, 'Wild Magic Surge'); if (f) f.text = "Your spellcasting can unleash surges of untamed magic. Immediately after you cast a sorcerer spell of 1st level or higher, the DM can have you roll a d20; if you roll a 1, roll on the Wild Magic Surge table to create a magical effect. Once per long rest, when you cast such a spell, you can instead choose to roll on the Wild Magic Surge table without the DM's prompt. Whenever you roll on the table, you regain your use of Tides of Chaos.";
+  f = feat(s, 'Bend Luck'); if (f) f.text = "When another creature you can see makes an attack roll, an ability check, or a saving throw, you can use your reaction and spend 1 sorcery point to roll 1d4 and apply the number rolled as a bonus or penalty (your choice) to the creature's roll. You can do so after the creature rolls but before any effects of the roll occur.";
+  f = feat(s, 'Controlled Chaos'); if (f) f.text = "Starting at 10th level, you gain a modicum of control over the surges of your wild magic. Whenever you roll on the Wild Magic Surge table, you can roll twice and use either number.";
   if (f) f.level = 10;
 
   /* Rogue — Assassin: ribbons replaced with a combat payoff (2024 direction). */
   s = sub('rogue', 'assassin'); mark(s);
   f = feat(s, 'Assassinate'); if (f) { f.text += '\nYou have advantage on initiative rolls. During the first round of combat, when you hit a creature with an attack, it takes extra damage of the weapon type equal to your rogue level.'; f.effects = Object.assign({}, f.effects, { initAdv: true }); }
-  f = feat(s, 'Infiltration Expertise'); if (f) f.text += '\nCreating a false identity takes 1 day instead of 7 (still 25 gp). While you are disguised in it, creatures have disadvantage on Insight and Investigation checks to see through it. Your speed is not halved while you move stealthily.';
+  f = feat(s, 'Infiltration Expertise'); if (f) f.text = "You can unfailingly create false identities for yourself. You must spend one day and 25 gp to establish the history, profession, and affiliations for an identity. You can't establish an identity that belongs to someone else. While you are disguised in this identity, other creatures have disadvantage on Wisdom (Insight) and Intelligence (Investigation) checks to see through it, and they believe you to be that person until given an obvious reason not to. In addition, your speed isn't halved while you move stealthily.";
 
   /* Rogue — Arcane Trickster: Spell Thief capstone is once per long rest and depends on enemy casters targeting you. */
   s = sub('rogue', 'arcane-trickster'); mark(s);
-  f = feat(s, 'Spell Thief'); if (f) { f.text += '\nUsable once per short or long rest instead of once per long rest. It also triggers when a creature you can see within 60 ft casts a spell (not only on you). The creature has disadvantage on the save if you are hidden from it. You can cast the stolen spell once without expending a spell slot, at the level it was cast, even if that level is above your slots; later casts use your slots as normal.'; f.uses = { max: 1, reset: 'short' }; }
+  f = feat(s, 'Spell Thief'); if (f) {
+    f.text = 'Immediately after a creature you can see within 60 feet of you casts a spell, you can use your reaction to force the creature to make a saving throw with its spellcasting ability modifier against your spell save DC. The creature has disadvantage on the save if you are hidden from it. On a failed save, you negate the spell\'s effect against you, and you steal the knowledge of the spell if it is at least 1st level (it doesn\'t need to be a wizard spell). For the next 8 hours, you know the spell, and the creature can\'t cast it until the 8 hours have passed.\nYou can cast the stolen spell once without expending a spell slot, at the level it was cast, even if that level is higher than any spell slot you have. After that, you can cast it only with your spell slots, and only if it is of a level you can cast.\nOnce you use this feature, you can\'t use it again until you finish a short or long rest.';
+    f.uses = { max: 1, reset: 'short' };
+  }
+  add(s, { level: 17, name: 'Arcane Memory', text: 'Before the knowledge of a stolen spell fades, you can try to memorize it: make an Intelligence check (DC 21 + the spell\'s level). On a success, you know the spell permanently, and it counts as a wizard spell for you. On a failure, you can\'t try to memorize that spell again until you steal it again.\nYou can have a number of memorized spells equal to your Intelligence modifier (minimum of one). If you memorize a spell while at this limit, you forget one memorized spell of your choice.\nYou cast a memorized spell using your spell slots. To cast a memorized spell of 5th level or higher, you expend your highest-level spell slot and make an Intelligence check (DC 10 + the spell\'s level), as when casting a spell from a scroll of a level you can\'t normally cast. On a success, the spell is cast at its own level. On a failure, the slot is wasted, and you can\'t attempt to cast a spell of 5th level or higher until you finish a long rest.\n(Add memorized spells on the Spells tab with "Add extra", or as custom spells.)' });
 
   /* Cleric — Trickery: duplicity as a bonus action (2024 direction). */
   s = sub('cleric', 'trickery'); mark(s);
-  f = feat(s, 'Blessing of the Trickster'); if (f) f.text += '\nYou can target yourself.';
-  f = feat(s, 'Channel Divinity: Invoke Duplicity'); if (f) f.text += '\nActivate it as a bonus action instead of an action; it does not require concentration.';
+  f = feat(s, 'Blessing of the Trickster'); if (f) f.text = "As an action, you can touch a willing creature (you can choose yourself) to give it advantage on Dexterity (Stealth) checks. This blessing lasts for 1 hour or until you use this feature again.";
+  f = feat(s, 'Channel Divinity: Invoke Duplicity'); if (f) f.text = "As a bonus action, you can use your Channel Divinity to create an illusory duplicate of yourself in an unoccupied space you can see within 30 feet of you. The illusion lasts for 1 minute and doesn't require concentration. As a bonus action on your turn, you can move it up to 30 feet to a space you can see, but it must remain within 120 feet of you. While it lasts, you can cast spells as though you were in the illusion's space, but you must use your own senses. When both you and your illusion are within 5 feet of a creature that can see the illusion, you have advantage on attack rolls against that creature.";
 
   /* ===== Round 2: remaining weak subclasses (each buff improves the subclass's own signature feature) ===== */
 
   /* Fighter — Arcane Archer: more shots, earlier damage scaling. */
   s = sub('fighter', 'arcane-archer'); mark(s);
-  f = feat(s, 'Arcane Shot'); if (f) { f.text += '\nUses equal to your Intelligence modifier (minimum 2) per short or long rest instead of two. Shot damage dice become 2d6 (3d6 at 10th, 4d6 at 15th), replacing the listed values.'; f.uses = { max: 'max(2,int)', reset: 'short' }; f.scale = { 3: '2d6', 10: '3d6', 15: '4d6' }; }
+  f = feat(s, 'Arcane Shot'); if (f) { f.text = "Once per turn when you fire a magic arrow from a shortbow or longbow as part of the Attack action, you can apply one of your Arcane Shot options to that arrow, deciding after the arrow hits (unless the option doesn't involve an attack roll). You know two options (three at 7th level, four at 10th, five at 15th, six at 18th). You can use Arcane Shot a number of times equal to your Intelligence modifier (minimum of two), and you regain all expended uses when you finish a short or long rest. Save DC = 8 + your proficiency bonus + your Intelligence modifier. The damage dice of your Arcane Shot options are 2d6 (3d6 at 10th level, 4d6 at 15th) in place of the values listed in each option."; f.uses = { max: 'max(2,int)', reset: 'short' }; f.scale = { 3: '2d6', 10: '3d6', 15: '4d6' }; }
 
   /* Barbarian — Storm Herald: the aura lasts the whole rage and its numbers follow rage damage. */
   s = sub('barbarian', 'storm-herald'); mark(s);
-  f = feat(s, 'Storm Aura'); if (f) f.text += '\nThe aura stays active for the whole rage (no bonus action each turn; you can still use a bonus action to re-trigger Sea on a new target). Desert fire damage and Tundra temp HP equal twice your Rage damage bonus; Sea lightning damage adds your Rage damage bonus.';
+  f = feat(s, 'Storm Aura'); if (f) f.text = "While raging, you emanate a stormy, magical aura that extends 10 feet from you in every direction. It activates when you enter your rage and lasts until the rage ends. Choose desert, sea, or tundra; you can change your choice whenever you gain a barbarian level. Save DC = 8 + your proficiency bonus + your Constitution modifier.\n**Desert:** when the aura activates, and at the start of each of your turns, each other creature of your choice in the aura takes fire damage equal to twice your Rage damage bonus.\n**Sea:** when the aura activates, and as a bonus action on each of your later turns, choose one other creature in the aura. It must make a Dexterity saving throw, taking 1d6 lightning damage + your Rage damage bonus on a failed save, or half as much on a successful one (2d6 at 10th level, 3d6 at 15th, 4d6 at 20th).\n**Tundra:** when the aura activates, and at the start of each of your turns, each creature of your choice in the aura gains temporary hit points equal to twice your Rage damage bonus.";
 
   /* Barbarian — Wild Magic: less swingy surges whose damage keeps pace with rage; the utility features stop costing the action economy. */
   s = sub('barbarian', 'wild-magic'); mark(s);
-  f = feat(s, 'Magic Awareness'); if (f) f.text += '\nUsable as a bonus action instead of an action, including while raging. You also learn which creatures in range are concentrating on a spell.';
+  f = feat(s, 'Magic Awareness'); if (f) f.text = "As a bonus action, even while raging, you can open your awareness to the presence of magic. Until the end of your next turn, you know the location of any spell or magic item within 60 feet of you that isn't behind total cover, and its school of magic, and you learn which creatures within 60 feet of you are concentrating on a spell. You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.";
   f = feat(s, 'Wild Surge'); if (f) f.text += '\nOnce per rage, you can reroll the Wild Magic table and choose either result (Controlled Surge replaces this at 14th level). Damage from Wild Surge effects adds your Rage damage bonus (once per creature per turn).';
-  f = feat(s, 'Bolstering Magic'); if (f) f.text += '\nBonus action instead of an action, with a range of 30 ft instead of touch.';
+  f = feat(s, 'Bolstering Magic'); if (f) f.text = "As a bonus action, you can choose one creature you can see within 30 feet of you (you can choose yourself) and bolster it with your wild magic. Choose one effect: for 10 minutes, the creature can roll a d3 whenever it makes an attack roll or an ability check and add the number rolled; or the creature rolls a d3 and regains one expended spell slot of a level equal to the number rolled or lower. You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.";
 
   /* Sorcerer — origin spells (Tasha's pattern) for origins that had none; Storm also gets them. They don't count against spells known. */
   const origin = (id, lists, note) => { const o = sub('sorcerer', id); if (!o) return; mark(o); o.spellsByLevel = lists;
@@ -4457,7 +4461,7 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Wizard — Enchantment: Hypnotic Gaze no longer eats the wizard's action every turn. */
   s = sub('wizard', 'enchantment'); mark(s);
-  f = feat(s, 'Hypnotic Gaze'); if (f) f.text += '\nMaintaining it each turn takes a bonus action instead of an action.';
+  f = feat(s, 'Hypnotic Gaze'); if (f) f.text = "As an action, choose one creature that you can see within 5 feet of you. If the target can see or hear you, it must succeed on a Wisdom saving throw against your wizard spell save DC or be charmed by you until the end of your next turn. The charmed creature's speed drops to 0, and it is incapacitated and visibly dazed. On later turns, you can use a bonus action to maintain this effect, extending its duration until the end of your next turn. The effect ends if you move more than 5 feet away from the creature, if the creature can neither see nor hear you, or if it takes damage. Once the effect ends, or if the creature succeeds on its initial saving throw, you can't use this feature on that creature again until you finish a long rest.";
 
   /* Rogue — Inquisitive: Insightful Fighting without spending the bonus action Cunning Action wants. */
   s = sub('rogue', 'inquisitive'); mark(s);
@@ -4465,15 +4469,15 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Rogue — Mastermind: the Help action pays off. */
   s = sub('rogue', 'mastermind'); mark(s);
-  f = feat(s, 'Master of Tactics'); if (f) f.text += '\nThe range is 60 ft instead of 30 ft. When the helped ally hits, it adds your Intelligence modifier to the damage. At 13th level the Help applies to two allies attacking the same creature.';
+  f = feat(s, 'Master of Tactics'); if (f) f.text = "You can use the Help action as a bonus action. When you use the Help action to aid an ally in attacking a creature, the target of that attack can be within 60 feet of you, rather than within 5 feet of you, if the target can see or hear you. When that ally hits, it adds your Intelligence modifier to the damage. Starting at 13th level, the Help can aid two allies attacking the same creature.";
 
   /* Monk — Kensei: the weapon tricks scale with the Martial Arts die. */
   s = sub('monk', 'kensei'); mark(s);
-  f = feat(s, 'Path of the Kensei'); if (f) f.text += "\nAgile Parry: any attack you make with a kensei weapon as part of the Attack action triggers the +2 AC (no unarmed strike needed). Kensei's Shot deals your Martial Arts die instead of 1d4.";
+  f = feat(s, 'Path of the Kensei'); if (f) f.text = "**Kensei Weapons:** choose two types of weapons to be your kensei weapons: one melee weapon and one ranged weapon, neither with the heavy or special property (longbows are allowed). You choose another type at 6th, 11th, and 17th level. These weapons count as monk weapons for you, and you are proficient with them.\n**Agile Parry:** if you make an attack with a kensei weapon as part of the Attack action on your turn, you gain a +2 bonus to AC until the start of your next turn, while you aren't incapacitated.\n**Kensei's Shot:** you can use a bonus action on your turn to make your ranged attacks with a kensei weapon more deadly. Until the end of the turn, any target you hit with a ranged attack using a kensei weapon takes extra damage equal to one roll of your Martial Arts die.\n**Way of the Brush:** you gain proficiency with your choice of calligrapher's supplies or painter's supplies.";
 
   /* Bard — College of Creation: create more often, and the dancing item works with inspiration. */
   s = sub('bard', 'creation'); mark(s);
-  f = feat(s, 'Performance of Creation'); if (f) { f.text += '\nUsable a number of times equal to your proficiency bonus per long rest instead of once.'; f.uses = { max: 'pb', reset: 'long' }; }
+  f = feat(s, 'Performance of Creation'); if (f) { f.text = "As an action, you can create one nonmagical item of your choice in an unoccupied space within 10 feet of you. The item must appear on a surface or in a liquid that can support it, and its gp value can't be more than 20 times your bard level. The item is Medium or smaller (Large at 6th level, Huge at 14th level), and it disappears after a number of hours equal to your proficiency bonus. You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest. You can also use it by expending a spell slot of 2nd level or higher."; f.uses = { max: 'pb', reset: 'long' }; }
   f = feat(s, 'Animating Performance'); if (f) f.text += '\nWhen you give Bardic Inspiration, the Dancing Item can take its action as part of that same bonus action.';
 
   /* Monk — Drunken Master: adapted from the "Pili" BG3 rebalance mod. DRUNK is a status defined in Cheeky Tipple. */
@@ -4489,15 +4493,15 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Cleric — Ambition (Plane Shift): duplicity like the buffed Trickery, plus a ruthless payoff. */
   s = sub('cleric', 'ambition'); mark(s);
-  f = feat(s, 'Channel Divinity: Invoke Duplicity'); if (f) f.text += '\nActivate it as a bonus action instead of an action; it does not require concentration.';
-  f = feat(s, 'Channel Divinity: Cloak of Shadows'); if (f) f.text += '\nActivate it as a bonus action instead of an action, and your first attack roll before it ends has advantage.';
+  f = feat(s, 'Channel Divinity: Invoke Duplicity'); if (f) f.text = "As a bonus action, you can use your Channel Divinity to create an illusory duplicate of yourself in an unoccupied space you can see within 30 feet of you. The illusion lasts for 1 minute and doesn't require concentration. As a bonus action on your turn, you can move it up to 30 feet to a space you can see. While it lasts, you can cast spells as though you were in the illusion's space, and you have advantage on attack rolls against creatures within 5 feet of the illusion.";
+  f = feat(s, 'Channel Divinity: Cloak of Shadows'); if (f) f.text = "As a bonus action, you can use your Channel Divinity to become invisible until the end of your next turn. You become visible if you attack or cast a spell. Your first attack roll before the invisibility ends has advantage.";
   add(s, { level: 6, name: "Bontu's Price", text: 'When a creature you can see within 30 ft drops to 0 hit points, you gain temporary hit points equal to your cleric level (once per turn).' });
 
   /* Artificer — Maverick (Exploring Eberron): the breakthrough and cantrip payoffs arrive at 3rd level. */
   s = sub('artificer', 'maverick'); mark(s);
-  f = feat(s, 'Arcane Breakthroughs'); if (f) f.text += '\nAt 3rd level you prepare two 1st-level Breakthrough spells instead of one, and Breakthrough spells you prepare do not count against your prepared spells.';
-  f = feat(s, 'Cantrip Specialist'); if (f) f.text += '\nYou learn two cantrips, and they can come from your Breakthrough list.';
-  f = feat(s, 'Cantrip Savant'); if (f) { f.level = 3; f.text += '\nGained at 3rd level (+1), +2 at 9th, +3 at 15th.'; f.scale = { 3: '+1', 9: '+2', 15: '+3' }; s.features.sort((a, b) => (a.level || 0) - (b.level || 0)); }
+  f = feat(s, 'Arcane Breakthroughs'); if (f) f.text = "Choose one class from bard, cleric, druid, paladin, ranger, sorcerer, warlock, and wizard: its spell list becomes one of your Breakthrough lists. You choose another class at 5th, 9th, 13th, and 17th level. When you finish a long rest, you can prepare two 1st-level spells from your Breakthrough lists, plus one more Breakthrough spell of 2nd level at 5th level, 3rd level at 9th, 4th level at 13th, and 5th level at 17th. These count as artificer spells for you, but they don't count against the number of artificer spells you can prepare.";
+  f = feat(s, 'Cantrip Specialist'); if (f) f.text = "You learn two cantrips of your choice from the artificer spell list or your Breakthrough lists. When you finish a short rest, you can replace one artificer cantrip you know with another from the artificer list or your Breakthrough lists.";
+  f = feat(s, 'Cantrip Savant'); if (f) { f.level = 3; f.text = "Your artificer cantrips gain a +1 bonus to attack rolls and saving throw DCs (+2 at 9th level, +3 at 15th). Once per long rest, as an action, you can replace one artificer cantrip you know with another from the artificer list or your Breakthrough lists."; f.scale = { 3: '+1', 9: '+2', 15: '+3' }; s.features.sort((a, b) => (a.level || 0) - (b.level || 0)); }
 
   /* ===== Round 3 (user-directed): weak subclasses found in the second review ===== */
 
@@ -4515,8 +4519,8 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
   /* Monk — Ascendant Dragon: short-rest recharges (monk is a short-rest class) and more of a dragon's nature. */
   s = sub('monk', 'ascendant-dragon'); mark(s);
   f = feat(s, 'Draconic Disciple'); if (f) f.text += '\n**Draconic Hide:** after a long rest choose acid, cold, fire, lightning, or poison: you have resistance to that damage type until your next long rest.';
-  f = feat(s, 'Breath of the Dragon'); if (f) { f.text += '\nUses recharge on a short or long rest instead of only a long rest.'; f.uses = { max: 'pb', reset: 'short' }; }
-  f = feat(s, 'Aspect of the Wyrm'); if (f) { f.text += '\nOnce per short or long rest instead of once per long rest (or 3 ki). While the aura is active you gain both options (Frightful Presence and Resistance), and you have blindsight 10 ft.'; f.uses = { max: 1, reset: 'short' }; }
+  f = feat(s, 'Breath of the Dragon'); if (f) { f.text = "When you take the Attack action on your turn, you can replace one of the attacks with an exhalation of draconic energy in a 20-foot cone or a 30-foot line that is 5 feet wide (your choice). Choose acid, cold, fire, lightning, or poison damage. Each creature in the area must make a Dexterity saving throw against your ki save DC, taking damage of the chosen type equal to two rolls of your Martial Arts die (three rolls at 11th level) on a failed save, or half as much on a successful one. You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a short or long rest. While you have no uses available, you can spend 2 ki points to use it again."; f.uses = { max: 'pb', reset: 'short' }; }
+  f = feat(s, 'Aspect of the Wyrm'); if (f) { f.text = "As a bonus action, you can create an aura of draconic power that radiates 10 feet from you for 1 minute. While the aura lasts, you have blindsight out to 10 feet and both of these effects:\n**Frightful Presence:** when you create the aura, and as a bonus action on later turns, you can choose a creature in the aura. It must succeed on a Wisdom saving throw against your ki save DC or be frightened of you for 1 minute. It repeats the saving throw at the end of each of its turns, ending the effect on itself on a success.\n**Resistance:** choose acid, cold, fire, lightning, or poison. You and your allies within the aura have resistance to that damage type.\nOnce you create this aura, you can't do so again until you finish a short or long rest, unless you spend 3 ki points to create it again."; f.uses = { max: 1, reset: 'short' }; }
   f = feat(s, 'Ascendant Aspect'); if (f) { f.text += '\n**Draconic Defiance:** once per long rest, when you fail a saving throw, you can choose to succeed instead, as an ancient dragon does.'; f.uses = { max: 1, reset: 'long' }; }
 
   /* Rogue — Thief: an early combat trick that is pure thief — lifting a weapon or item out of an enemy's hands. */
@@ -4547,19 +4551,19 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Wizard — Conjuration: the utility features run on a bonus action. */
   s = sub('wizard', 'conjuration'); mark(s);
-  f = feat(s, 'Minor Conjuration'); if (f) f.text += '\nBonus action instead of an action.';
-  f = feat(s, 'Benign Transposition'); if (f) f.text += '\nBonus action instead of an action.';
+  f = feat(s, 'Minor Conjuration'); if (f) f.text = "As a bonus action, you can conjure up an inanimate object in your hand or on the ground in an unoccupied space that you can see within 10 feet of you. This object can be no larger than 3 feet on a side and weigh no more than 10 pounds, and its form must be that of a nonmagical object that you have seen. The object is visibly magical, radiating dim light out to 5 feet. It disappears after 1 hour, when you use this feature again, or if it takes or deals any damage.";
+  f = feat(s, 'Benign Transposition'); if (f) f.text = "As a bonus action, you can teleport up to 30 feet to an unoccupied space that you can see. Alternatively, you can choose a space within range that is occupied by a Small or Medium creature. If that creature is willing, you both teleport, swapping places. Once you use this feature, you can't use it again until you finish a long rest or you cast a conjuration spell of 1st level or higher.";
 
   /* Ranger — Monster Slayer: the prey mark scales and the defensive features hold up at higher levels. */
   s = sub('ranger', 'monster-slayer'); mark(s);
   f = feat(s, "Hunter's Sense"); if (f) f.text += "\nWhen you designate a Slayer's Prey, you learn this about the target for free.";
-  f = feat(s, "Slayer's Prey"); if (f) { f.text += '\nThe extra damage is 1d8 (2d8 at 11th), and you know the direction to the target while it is within 1 mile.'; f.scale = { 3: '1d8', 11: '2d8' }; }
-  f = feat(s, 'Supernatural Defense'); if (f) f.text += "\nThe bonus is 1d8 instead of 1d6 and applies to every saving throw you make against a spell or magical effect, not only your prey's.";
-  f = feat(s, "Mage's Nemesis"); if (f) { f.text += '\nUsable twice per short or long rest instead of once.'; f.uses = { max: 2, reset: 'short' }; }
+  f = feat(s, "Slayer's Prey"); if (f) { f.text = "As a bonus action, you designate one creature you can see within 60 feet of you as the target of this feature. The first time each turn that you hit that target with a weapon attack, it takes an extra 1d8 damage (2d8 at 11th level), and you know the direction to the target while it is within 1 mile of you. This benefit lasts until you finish a short or long rest. It ends early if you designate a different creature."; f.scale = { 3: '1d8', 11: '2d8' }; }
+  f = feat(s, 'Supernatural Defense'); if (f) f.text = "Whenever you make a saving throw against a spell or magical effect, whenever the target of your Slayer's Prey forces you to make a saving throw, and whenever you make an ability check to escape that target's grapple, add 1d8 to your roll.";
+  f = feat(s, "Mage's Nemesis"); if (f) { f.text = "When you see a creature casting a spell or teleporting within 60 feet of you, you can use your reaction to try to magically foil it. The creature must succeed on a Wisdom saving throw against your spell save DC, or its spell fails and is wasted, or its teleport fails. You can use this feature twice, and you regain all expended uses when you finish a short or long rest."; f.uses = { max: 2, reset: 'short' }; }
 
   /* Cleric — Death: stays a necrotic reaper, but undead can no longer shut it off and it feeds on the dying. */
   s = sub('cleric', 'death'); mark(s);
-  f = feat(s, 'Channel Divinity: Touch of Death'); if (f) f.text += '\nAlso works with spell attacks, not only melee attacks.';
+  f = feat(s, 'Channel Divinity: Touch of Death'); if (f) f.text = "When you hit a creature with a melee attack or a spell attack, you can use your Channel Divinity to deal extra necrotic damage to the target equal to 5 + twice your cleric level.";
   add(s, { level: 6, name: "Death's Harvest", text: 'Once per turn, when you reduce a hostile creature to 0 hit points with necrotic damage, you gain temporary hit points equal to your cleric level.' });
   f = feat(s, 'Inescapable Destruction'); if (f) f.text += '\nCreatures immune to necrotic damage take half damage from it instead.';
   f = feat(s, 'Divine Strike'); if (f) f.text += '\nYou can instead add your Wisdom modifier to the damage of your necromancy cantrips (choose when you reach 8th level).';
@@ -4579,7 +4583,7 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Battle Master (both): one more superiority die; dice also help with skill checks. */
   s = sub('fighter', 'battle-master'); mark(s);
-  f = feat(s, 'Combat Superiority'); if (f) { f.text += '\nYou have one additional superiority die (5 at 3rd, 6 at 7th, 7 at 15th).'; f.uses = Object.assign({}, f.uses, { max: 'lvl>=15?7:lvl>=7?6:5' }); }
+  f = feat(s, 'Combat Superiority'); if (f) { f.text = "You learn maneuvers that are fueled by special dice called superiority dice. You know three maneuvers of your choice (five at 7th level, seven at 10th, nine at 15th), and whenever you learn new maneuvers, you can also replace one you know with a different one. You have five superiority dice (six at 7th level, seven at 15th), which are d8s (d10s at 10th level, d12s at 18th). A superiority die is expended when you use it, and you regain all of your expended superiority dice when you finish a short or long rest. Maneuver save DC = 8 + your proficiency bonus + your Strength or Dexterity modifier (your choice)."; f.uses = Object.assign({}, f.uses, { max: 'lvl>=15?7:lvl>=7?6:5' }); }
   f = feat(s, 'Student of War'); if (f) { f.text += '\nYou also gain proficiency in one skill from the fighter list. When you make an ability check with a tool or skill you are proficient in, you can expend a superiority die and add it to the check (after rolling, before the result).'; f.choice = toArr(f.choice).concat([{ id: 'bsk', label: 'Student of War skill', type: 'skill', count: 1, from: fsk }]); }
 
   /* Eldritch Knight (both): cantrip-for-attack swap earlier; rituals and Arcana outside combat. */
@@ -4592,16 +4596,16 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Arcane Archer (out of combat; combat was buffed in round 2): both lore cantrips plus magic sensing. */
   s = sub('fighter', 'arcane-archer'); mark(s);
-  f = feat(s, 'Arcane Archer Lore'); if (f) f.text += '\nYou learn both prestidigitation and druidcraft, and you can cast detect magic as a ritual (INT is your spellcasting ability for these).';
+  f = feat(s, 'Arcane Archer Lore'); if (f) f.text = "You gain proficiency in your choice of the Arcana or Nature skill, and you learn both the prestidigitation and druidcraft cantrips. You can also cast detect magic as a ritual. Intelligence is your spellcasting ability for these spells.";
 
   /* Cavalier (damage + defense): stronger punish attack, more wards. */
   s = sub('fighter', 'cavalier'); mark(s);
-  f = feat(s, 'Unwavering Mark'); if (f) { f.text += '\nThe special attack adds your full fighter level to damage instead of half, and uses are regained on a short or long rest.'; f.uses = Object.assign({}, f.uses, { reset: 'short' }); }
-  f = feat(s, 'Warding Maneuver'); if (f) { f.text += '\nUses equal to your proficiency bonus or CON modifier, whichever is higher.'; f.uses = Object.assign({}, f.uses, { max: 'max(pb,con)' }); }
+  f = feat(s, 'Unwavering Mark'); if (f) { f.text = "When you hit a creature with a melee weapon attack, you can mark the creature until the end of your next turn. While it is within 5 feet of you, a creature marked by you has disadvantage on any attack roll that doesn't target you. If a marked creature deals damage to anyone other than you, you can make a special melee weapon attack against it as a bonus action on your next turn, with advantage on the attack roll; if it hits, it deals extra damage equal to your fighter level. You can make this special attack a number of times equal to your Strength modifier (minimum of once), and you regain all expended uses when you finish a short or long rest."; f.uses = Object.assign({}, f.uses, { reset: 'short' }); }
+  f = feat(s, 'Warding Maneuver'); if (f) { f.text = "If you or a creature you can see within 5 feet of you (including your mount) is hit by an attack, you can use your reaction to roll 1d8 and add the number rolled to the target's AC against that attack. If the attack still hits, the target has resistance against the attack's damage. You can use this feature a number of times equal to your proficiency bonus or your Constitution modifier, whichever is higher, and you regain all expended uses when you finish a long rest."; f.uses = Object.assign({}, f.uses, { max: 'max(pb,con)' }); }
 
   /* Samurai (damage): Fighting Spirit more often. */
   s = sub('fighter', 'samurai'); mark(s);
-  f = feat(s, 'Fighting Spirit'); if (f) { f.text += '\nUses increase to 4 at 10th level and 5 at 15th level.'; f.uses = Object.assign({}, f.uses, { max: 'lvl>=15?5:lvl>=10?4:3' }); }
+  f = feat(s, 'Fighting Spirit'); if (f) { f.text = "As a bonus action on your turn, you can give yourself advantage on weapon attack rolls until the end of the current turn. When you do so, you also gain 5 temporary hit points (10 at 10th level, 15 at 15th). You can use this feature three times (four at 10th level, five at 15th), and you regain all expended uses when you finish a long rest."; f.uses = Object.assign({}, f.uses, { max: 'lvl>=15?5:lvl>=10?4:3' }); }
 
   /* Psi Warrior (out of combat): psionic insight and telepathic utility. */
   s = sub('fighter', 'psi-warrior'); mark(s);
@@ -4609,16 +4613,16 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Rune Knight (both): one more rune known (runes mix combat and utility). */
   s = sub('fighter', 'rune-knight'); mark(s);
-  f = feat(s, 'Rune Carver'); if (f) f.text += '\nYou know one additional rune (3 at 3rd, 4 at 7th, 5 at 10th, 6 at 15th).';
+  f = feat(s, 'Rune Carver'); if (f) f.text = "You can use magic runes to enhance your gear. You know three runes of your choice (four at 7th level, five at 10th, six at 15th), and whenever you gain a fighter level, you can replace one rune you know with another. Whenever you finish a long rest, you can inscribe each rune you know onto a different object you touch. Each rune has a passive benefit and can be invoked once, regaining the invocation when you finish a short or long rest. Save DC = 8 + your proficiency bonus + your Constitution modifier.\nRunes: **Cloud** (deflect an attack to another creature), **Fire** (shackles: +2d6 fire, restrained), **Frost** (+2 to STR/CON checks and saves for 10 minutes), **Stone** (WIS save or charmed, speed 0), **Hill** (7th level: resistance to bludgeoning, piercing, and slashing for 1 minute), **Storm** (7th level: prophetic state; reaction to grant advantage or disadvantage).";
 
   /* Banneret (combat support; social was buffed in its own file): the inspiration die grows. */
   s = sub('fighter', 'banneret'); mark(s);
-  f = feat(s, 'Commanding Presence'); if (f) { f.text += '\nThe die becomes a d8 at 10th level and a d10 at 18th level.'; f.uses = Object.assign({}, f.uses, { die: { 3: 'd6', 10: 'd8', 18: 'd10' } }); }
+  f = feat(s, 'Commanding Presence'); if (f) { f.text = "You gain proficiency in the Persuasion skill (or another Charisma skill of your choice if you're already proficient). As a bonus action, you can grant one ally within 30 feet of you who can hear you a d6 (d8 at 10th level, d10 at 18th) to add to its next attack roll or saving throw within 1 minute. You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a short or long rest."; f.uses = Object.assign({}, f.uses, { die: { 3: 'd6', 10: 'd8', 18: 'd10' } }); }
 
   /* Echo Knight (utility only; already strong in combat): the echo scouts and helps. Unleash Incarnation stays at the book's CON modifier (min 1). */
   s = sub('fighter', 'echo-knight'); mark(s);
   f = feat(s, 'Manifest Echo'); if (f) f.text += '\nOutside combat, the echo can take the Help action (using your action) for a check made within 5 ft of it, and you can make Wisdom (Perception) checks from its position.';
-  f = feat(s, 'Echo Avatar'); if (f) f.text += '\nThe range becomes 1 mile, and you can speak through the echo while using this feature.';
+  f = feat(s, 'Echo Avatar'); if (f) f.text = "As an action, you can temporarily transfer your consciousness to your echo. While it lasts, you see through your echo's eyes and hear through its ears, but not through your own eyes and ears, and you can speak through the echo. The transfer lasts for up to 10 minutes, and you can end it at any time (no action required). While you use your echo this way, it can be up to 1 mile away from you without being destroyed.";
 
   /* Renegade (out of combat): a scoundrel's expertise. */
   s = sub('fighter', 'renegade'); mark(s);
@@ -4626,7 +4630,7 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
 
   /* Gunslinger (damage): a slightly bigger grit pool. */
   s = sub('fighter', 'gunslinger'); mark(s);
-  f = feat(s, 'Adept Marksman'); if (f) { f.text += '\nGrit points equal your WIS modifier (minimum 2).'; f.uses = Object.assign({}, f.uses, { max: 'max(2,wis)'
+  f = feat(s, 'Adept Marksman'); if (f) { f.text = "You learn two Trick Shots of your choice (one more at 7th, 10th, 15th, and 18th level). You have a number of grit points equal to your Wisdom modifier (minimum of 2), and you regain all expended grit points when you finish a short or long rest. You also regain 1 grit point when you roll a 20 on an attack roll with a firearm or reduce a creature to 0 hit points with one. Trick Shot save DC = 8 + your proficiency bonus + your Dexterity modifier."; f.uses = Object.assign({}, f.uses, { max: 'max(2,wis)'
 }); }
 
   /* ===== Round 5: Player's Handbook monk traditions (user-directed; Shadow is the weakest). Mostly the 2024 direction. ===== */
@@ -4638,15 +4642,15 @@ DND.addSubclass({ class: 'bard', id: 'tragedy', name: 'College of Tragedy', sour
     f.effects = Object.assign({}, f.effects, { darkvisionOrPlus: [60, 30], senses: { 'sight in magical darkness': 60 }, spellsAlways: ['Darkness', 'Darkvision', 'Pass without Trace', 'Silence'] });
   }
   f = feat(s, 'Shadow Step'); if (f) f.text += '\nShadow Strike: immediately after you teleport, you can spend 1 ki to make one unarmed strike as part of the same bonus action.';
-  f = feat(s, 'Cloak of Shadows'); if (f) f.text += '\nYou can use it as a bonus action instead of an action.';
-  f = feat(s, 'Opportunist'); if (f) f.text += '\nOnce on each creature\'s turn you can use this without spending your reaction, and the attack has advantage.';
+  f = feat(s, 'Cloak of Shadows'); if (f) f.text = "When you are in an area of dim light or darkness, you can use a bonus action to become invisible. You remain invisible until you make an attack, cast a spell, or are in an area of bright light.";
+  f = feat(s, 'Opportunist'); if (f) f.text = "Whenever a creature within 5 feet of you is hit by an attack made by a creature other than you, you can make a melee attack against the creature that was hit. Once on each creature's turn, you can make this attack without using your reaction; otherwise it uses your reaction. You have advantage on this attack.";
 
   /* Way of the Open Hand: healing more often, mobility, a deadlier palm. */
   s = sub('monk', 'open-hand'); mark(s);
   f = feat(s, 'Open Hand Technique'); if (f) f.text += '\nYou can also apply a technique when you hit with the unarmed strike from Martial Arts (the bonus action strike), once per turn.';
-  f = feat(s, 'Wholeness of Body'); if (f) { f.text += '\nYou can use it as a bonus action instead of an action, twice per long rest from 11th level.'; f.uses = Object.assign({}, f.uses, { max: 'lvl>=11?2:1' }); }
+  f = feat(s, 'Wholeness of Body'); if (f) { f.text = "As a bonus action, you can regain hit points equal to three times your monk level. You can use this feature once (twice starting at 11th level), and you regain all expended uses when you finish a long rest."; f.uses = Object.assign({}, f.uses, { max: 'lvl>=11?2:1' }); }
   add(s, { level: 11, name: 'Fleet Step', text: 'When you take a bonus action other than Step of the Wind, you can also use Step of the Wind immediately after it (spending its ki as normal).' });
-  f = feat(s, 'Quivering Palm'); if (f) f.text += '\nOn a successful save the target takes 10d12 force damage instead of 10d10 necrotic.';
+  f = feat(s, 'Quivering Palm'); if (f) f.text = "When you hit a creature with an unarmed strike, you can spend 3 ki points to start imperceptible vibrations, which last for a number of days equal to your monk level. The vibrations are harmless unless you use your action to end them; you and the target must be on the same plane of existence. When you do, the creature must make a Constitution saving throw. If it fails, it is reduced to 0 hit points. If it succeeds, it takes 10d12 force damage. You can have only one creature under the effect of this feature at a time, and you can end the vibrations harmlessly without using an action.";
 
   /* Way of the Four Elements (adds to its round-1 buff): elemental movement and a capstone. */
   s = sub('monk', 'four-elements');
@@ -6350,10 +6354,17 @@ S('Vortex Warp', 2, 'Con', '1A', '90 ft', 'V, S', 'I', 'RSW', 'A creature you ca
   App.keepDet = {};
   const keep = (k, dflt) => { const v = App.keepDet[k]; return `data-keep="${esc(k)}" data-dflt="${dflt ? 1 : 0}" ${(v === undefined ? dflt : v) ? 'open' : ''}`; };
   const snapDet = () => document.querySelectorAll('details[data-keep]').forEach(d => {
-    const k = d.dataset.keep; if (d.open === (d.dataset.dflt === '1')) delete App.keepDet[k]; else App.keepDet[k] = d.open;
+    const k = d.dataset.keep;
+    // choice lists: remember the actual state, so a list doesn't snap shut the moment its last pick makes it "done"
+    if (k.startsWith('ch|')) { App.keepDet[k] = d.open; return; }
+    if (d.open === (d.dataset.dflt === '1')) delete App.keepDet[k]; else App.keepDet[k] = d.open;
   });
   App.render = function () {
     snapDet();
+    // every change re-renders the whole page: keep the page's and the open dialog's scroll position
+    // (the dialog backdrop is the scroller; a fresh one starts at the top, which threw phones back up on every tick)
+    const wy = window.scrollY || 0; const bg0 = document.querySelector('.modal-bg');
+    const sameModal = !!App.modal && App.modal === App._shownModal; const btop = bg0 ? bg0.scrollTop : 0;
     REG = [];
     const root = document.getElementById('app');
     const c = App.c;
@@ -6372,6 +6383,9 @@ S('Vortex Warp', 2, 'Con', '1A', '90 ft', 'V, S', 'I', 'RSW', 'A creature you ca
     root.innerHTML = html;
     // keep the page behind a dialog from scrolling (iOS scrolls it through the backdrop)
     if (document.body && document.body.classList) document.body.classList.toggle('modal-open', !!App.modal);
+    if (sameModal) { const bg = document.querySelector('.modal-bg'); if (bg) bg.scrollTop = btop; }
+    App._shownModal = App.modal;
+    if (window.scrollTo && (window.scrollY || 0) !== wy) window.scrollTo(0, wy);
   };
 
   function topbar() {
@@ -6395,7 +6409,7 @@ S('Vortex Warp', 2, 'Con', '1A', '90 ft', 'V, S', 'I', 'RSW', 'A creature you ca
         <div class="muted">${esc(sub ? sub.name : race ? race.name : 'No race')} · ${classes || 'No class'} · Level ${D.level}${c.background && DND.backgrounds[c.background] ? ' · ' + esc(DND.backgrounds[c.background].name) : ''}</div>
       </div><div class="row">
         <label class="row small insp"><input type="checkbox" ${c.inspiration ? 'checked' : ''} onchange="App.set('inspiration', this.checked)"> Inspiration</label>
-        ${luOpen() ? `<button class="warnbtn" onclick="App.reviewLevelUp()" title="Reopen the level-up dialog to finish its choices and spells">${Icons.svg('crown')} Finish level up <span class="badge">${luOpen()}</span></button>` : ''}
+        ${luOpen() ? `<button class="warnbtn" onclick="App.reviewLevelUp()" title="Reopen the level-up dialog to finish its choices and spells">${Icons.svg('crown')} Finish level up <span class="badge">${luOpen()}</span></button>` : App.luReopen === App.curId ? `<button onclick="App.reviewLevelUp()" title="Reopen the last level-up dialog to change its choices">${Icons.svg('crown')} Reopen level up</button>` : ''}
         ${D.level < 20 || !c.classes.length ? `<button class="primary" onclick="App.openLevelUp()">${Icons.svg('crown')} ${c.classes.length ? 'Level up' : 'Choose class'}</button>` : ''}
       </div></div>
       <div class="stats">
@@ -7479,10 +7493,11 @@ S('Vortex Warp', 2, 'Con', '1A', '90 ft', 'V, S', 'I', 'RSW', 'A creature you ca
   App.closeLevelUp = () => { App.peek = null;
     const st = App.modalState || {}; const n = st.phase === 'pick' ? 0 : luItems(st.i);
     if (n && !confirm(`${n} choice${n > 1 ? 's / spell picks are' : ' / spell pick is'} still open.\nClose anyway? You can come back with "Finish level up" next to the Level up button.`)) return;
+    if (st.phase !== 'pick') App.luReopen = App.curId; // until the next level up, a header button brings the dialog back
     App.modal = null; App.render();
   };
   App.openLevelUp = function (i) {
-    const c = App.c;
+    const c = App.c; App.luReopen = null;
     if (!c.classes.length) { App.tab = 'build'; App.buildStep = 'class'; App.modal = null; App.render(); return; }
     if (E.totalLevel(c) >= 20) { App.toast('Level 20 is the maximum.'); return; }
     if (i !== undefined) return App.doLevelUp(i);
@@ -7534,7 +7549,10 @@ S('Vortex Warp', 2, 'Con', '1A', '90 ft', 'V, S', 'I', 'RSW', 'A creature you ca
     const cls = DND.classes[ce.id]; const hd = cls.hitDie; const hpv = ce.hp && ce.hp[ce.level - 1];
     const isFirst = st.i === 0 && ce.level === 1;
     const gained = D.features.filter(f => !f.isOption && f.name !== 'Class Skills' && ((f.cls === ce.id && f.level === ce.level) || (!f.cls && f.level > 1 && f.level === D.level)));
-    const choices = D.choices.filter(x => (x.s.cls === ce.id && (x.f.level || 1) === ce.level) || x.picks.length < x.count);
+    // a choice shown in this dialog stays listed after its last pick (e.g. knacks from an earlier level), so it can still be changed
+    st.shown = st.shown || {};
+    const choices = D.choices.filter(x => (x.s.cls === ce.id && (x.f.level || 1) === ce.level) || x.picks.length < x.count || st.shown[x.key]);
+    choices.forEach(x => { st.shown[x.key] = 1; });
     const needSub = ce.level >= (cls.subclassLevel || 3) && (!ce.subclass || ce.level === (cls.subclassLevel || 3));
     return `<div class="head"><div class="selhead">${Icons.forClass(ce.id, 'big')}<div><h3>${esc(cls.name)} ${ce.level}</h3><div class="small muted">Character level ${D.level}</div></div></div><button onclick="App.closeLevelUp()">Close</button></div>
       <div class="panel"><div class="row between"><span><b>Hit points</b> <span class="muted small">Max ${D.hpMax}</span></span>
